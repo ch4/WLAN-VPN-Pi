@@ -11,6 +11,10 @@
 #
 # By default this script does nothing.
 
+exec 2> /tmp/rc.local.log      # send stderr from rc.local to a log file
+exec 1>&2                      # send stdout to the same log file
+set -x                         # tell sh to display commands before execution
+
 # Print the IP address
 _IP=$(hostname -I) || true
 if [ "$_IP" ]; then
@@ -31,8 +35,10 @@ sudo service isc-dhcp-server restart
 sudo service ssh restart
 
 # start the VPN tunnel
-sudo /home/pi/start-vpn.sh
-
+#sudo /home/pi/start-vpn.sh
+#sudo /home/pi/stop-vpn-common.sh
+sudo /home/pi/routing_passthrough.sh
+sudo service hostapd restart
 # end of the modification
 
 exit 0
